@@ -249,12 +249,20 @@ spec:
     retryStrategy:
       limit: {{ $.Values.retryCount }}
     container:
-      image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
       # chaincode is packed with tar, first extract it
+      {{- if eq $.Values.chaincode.language "golang" }}
+      image: hyperledger/fabric-tools:{{ $.Values.hyperledgerVersion }}
+      command: ["sh", "-c", "mkdir -p $GOPATH/src/chaincode && \
+                             tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C $GOPATH/src/chaincode && \ 
+                             peer chaincode install -p chaincode/{{ $chaincode.name }} -n {{ $chaincode.name }} \
+                                  -v {{ $.Values.chaincode.version }} -l {{ $.Values.chaincode.language }}"]
+      {{- else }}
+      image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
       command: ["sh", "-c", "mkdir -p /chaincode && \
                              tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C /chaincode && \ 
                              peer chaincode install -p /chaincode/{{ $chaincode.name }} -n {{ $chaincode.name }} \
                                   -v {{ $.Values.chaincode.version }} -l {{ $.Values.chaincode.language }}"]
+      {{- end }}
 
       volumeMounts:
         - mountPath: /etc/hyperledger/fabric/tls/

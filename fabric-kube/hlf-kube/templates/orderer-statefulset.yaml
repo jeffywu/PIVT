@@ -180,7 +180,7 @@ spec:
         {{- if $.Values.metrics.orderer.enabled }}
         - name: ORDERER_METRICS_PROVIDER
           value: {{ $.Values.metrics.orderer.provider }}
-        {{- if eq $.Value.metrics.orderer.provider "statsd" }}
+        {{- if eq $.Values.metrics.orderer.provider "statsd" }}
         - name: ORDERER_METRICS_STATSD_NETWORK
           value: {{ $.Values.metrics.orderer.statsd.network }}
         - name: ORDERER_METRICS_STATSD_ADDRESS
@@ -188,7 +188,7 @@ spec:
         - name: ORDERER_METRICS_STATSD_PREFIX
           value: {{ $org.Name | lower }}--{{ $host.Hostname | lower }}
         - name: ORDERER_METRICS_STATSD_WRITE_INTERVAL
-          value: {{ $.Values.metrics.orderer.statsd.writeInterval | default 10s }}
+          value: {{ $.Values.metrics.orderer.statsd.writeInterval }}
         {{- end }}
         {{- end }}
 

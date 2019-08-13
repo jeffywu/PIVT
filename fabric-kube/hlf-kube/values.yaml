@@ -137,7 +137,7 @@ metrics:
     # provider can also be set to prometheus
     provider: statsd
     statsd:
-      network: tcp
+      network: tcp  # tcp or udp
       address: statsd-host:8125
       writeInterval: 10s
 
@@ -147,6 +147,6 @@ metrics:
     # provider can also be set to prometheus
     provider: statsd
     statsd:
-      network: tcp # tcp or udp
+      network: tcp  # tcp or udp
       address: statsd-host:8125
       writeInterval: 10s

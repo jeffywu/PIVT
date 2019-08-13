@@ -275,7 +275,7 @@ spec:
         {{- if $.Values.metrics.core.enabled }}
         - name: CORE_METRICS_PROVIDER
           value: {{ $.Values.metrics.core.provider }}
-        {{- if eq $.Value.metrics.core.provider "statsd" }}
+        {{- if eq $.Values.metrics.core.provider "statsd" }}
         - name: CORE_METRICS_STATSD_NETWORK
           value: {{ $.Values.metrics.core.statsd.network }}
         - name: CORE_METRICS_STATSD_ADDRESS

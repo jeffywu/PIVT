@@ -272,7 +272,21 @@ spec:
           value: DEBUG
         - name: GRPC_TRACE
           value:  all
-        
+        {{- if $.Values.metrics.core.enabled }}
+        - name: CORE_METRICS_PROVIDER
+          value: {{ $.Values.metrics.core.provider }}
+        {{- if eq $.Value.metrics.core.provider "statsd" }}
+        - name: CORE_METRICS_STATSD_NETWORK
+          value: {{ $.Values.metrics.core.statsd.network }}
+        - name: CORE_METRICS_STATSD_ADDRESS
+          value: {{ $.Values.metrics.core.statsd.address }}
+        - name: CORE_METRICS_STATSD_PREFIX
+          value: {{ $org.Name | lower }}--{{ $peer | lower }}
+        - name: CORE_METRICS_STATSD_WRITE_INTERVAL
+          value: {{ $.Values.metrics.core.statsd.writeInterval }}
+        {{- end }}
+        {{- end }}
+ 
       # CouchDB container
       - name: couchdb
         image: hyperledger/fabric-couchdb:{{ $.Values.couchdb.version }}

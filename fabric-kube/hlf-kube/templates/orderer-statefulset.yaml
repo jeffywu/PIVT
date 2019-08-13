@@ -177,6 +177,20 @@ spec:
         #   value: "7059"
         # - name: ORDERER_GENERAL_CLUSTER_LISTENADDRESS
         #   value: 0.0.0.0
+        {{- if $.Values.metrics.orderer.enabled }}
+        - name: ORDERER_METRICS_PROVIDER
+          value: {{ $.Values.metrics.orderer.provider }}
+        {{- if eq $.Value.metrics.orderer.provider "statsd" }}
+        - name: ORDERER_METRICS_STATSD_NETWORK
+          value: {{ $.Values.metrics.orderer.statsd.network }}
+        - name: ORDERER_METRICS_STATSD_ADDRESS
+          value: {{ $.Values.metrics.orderer.statsd.address }}
+        - name: ORDERER_METRICS_STATSD_PREFIX
+          value: {{ $org.Name | lower }}--{{ $host.Hostname | lower }}
+        - name: ORDERER_METRICS_STATSD_WRITE_INTERVAL
+          value: {{ $.Values.metrics.orderer.statsd.writeInterval | default 10s }}
+        {{- end }}
+        {{- end }}
 
         - name: HFC_LOGGING
           value: '{"info":"console"}'

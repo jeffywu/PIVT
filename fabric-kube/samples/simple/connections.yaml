@@ -1,0 +1,25 @@
+name: Fabric
+version: "1.0"
+
+channels:
+  common:
+    peers:
+      hlf-peer--karga--peer9:
+        eventSource: true
+
+organizations:
+  Karga:
+    mspid: KargaMSP
+    peers:
+    - hlf-peer--karga--peer9
+    adminPrivateKey:
+      path: /var/hyperledger/msp/keystore/key.pem
+    signedCert:
+      path: /var/hyperledger/msp/signcerts/cert.pem
+
+peers:
+  hlf-peer--karga--peer9:
+    url: grpc://hlf-peer--karga--peer9.default.svc:7051
+    grpcOptions:
+      ssl-target-name-override: hlf-peer--karga--peer9
+      grpc.keepalive_time_ms: 600000

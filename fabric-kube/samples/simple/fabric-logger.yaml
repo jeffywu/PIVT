@@ -1,0 +1,18 @@
+peer:
+    mspName: KargaMSP
+    peerName: hlf-peer--karga--peer9
+    username: admin
+
+splunk:
+    hec:
+        token: 12345678-ABCD-EFGH-IJKL-123456789012
+        port: 8088
+        host: splunk-splunk-kube.splunk.svc
+    index: hyperledger_logs
+
+secrets:
+  peer:
+    cert: hlf-peer--karga--peer9-msp
+    certItem: cert.pem 
+    key: hlf-peer--karga--peer9-msp
+    keyItem: key.pem

@@ -250,18 +250,18 @@ spec:
       limit: {{ $.Values.retryCount }}
     container:
       # chaincode is packed with tar, first extract it
-      {{- if eq $.Values.chaincode.language "golang" }}
+      {{- if eq $chaincode.language "golang" }}
       image: hyperledger/fabric-tools:{{ $.Values.hyperledgerVersion }}
       command: ["sh", "-c", "mkdir -p $GOPATH/src/chaincode && \
                              tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C $GOPATH/src/chaincode && \ 
                              peer chaincode install -p chaincode/{{ $chaincode.name }} -n {{ $chaincode.name }} \
-                                  -v {{ $.Values.chaincode.version }} -l {{ $.Values.chaincode.language }}"]
+                                  -v {{ $.Values.chaincode.version }} -l {{ $chaincode.language }}"]
       {{- else }}
       image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
       command: ["sh", "-c", "mkdir -p /chaincode && \
                              tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C /chaincode && \ 
                              peer chaincode install -p /chaincode/{{ $chaincode.name }} -n {{ $chaincode.name }} \
-                                  -v {{ $.Values.chaincode.version }} -l {{ $.Values.chaincode.language }}"]
+                                  -v {{ $.Values.chaincode.version }} -l {{ $chaincode.language }}"]
       {{- end }}
 
       volumeMounts:
@@ -324,7 +324,7 @@ spec:
       limit: {{ $.Values.retryCount }}
     container:
       image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
-      command: ["sh", "-c", "peer chaincode instantiate -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $.Values.chaincode.version }} -l {{ $.Values.chaincode.language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
+      command: ["sh", "-c", "peer chaincode instantiate -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $.Values.chaincode.version }} -l {{ $chaincode.language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
                                 {{- if $.Values.tlsEnabled }}
                                     --tls --cafile /hlf_config/orderer-tlsca/tlscacert.pem \
                                 {{- end }}
@@ -389,7 +389,7 @@ spec:
       limit: {{ $.Values.retryCount }}
     container:
       image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
-      command: ["sh", "-c", "peer chaincode upgrade -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $.Values.chaincode.version }} -l {{ $.Values.chaincode.language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
+      command: ["sh", "-c", "peer chaincode upgrade -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $.Values.chaincode.version }} -l {{ $chaincode.language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
                                 {{- if $.Values.tlsEnabled }}
                                     --tls --cafile /hlf_config/orderer-tlsca/tlscacert.pem \
                                 {{- end }}

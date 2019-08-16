@@ -14,6 +14,7 @@ network:
   # defines which chaincodes will be installed to which organizations
   chaincodes:
     - name: high-throughput
+      language: golang
       # chaincode will be installed to all peers in these organizations
       orgs: [Karga, Nevergreen, Atlantis]
       # at which channels are we instantiating/upgrading chaincode?
@@ -24,16 +25,16 @@ network:
         orgs: [Karga, Nevergreen, Atlantis]
         policy: OR('KargaMSP.member','NevergreenMSP.member','AtlantisMSP.member')
         
-    # - name: even-simpler
-    #   orgs: [Karga, Atlantis]
-    #   channels:
-    #   - name: private-karga-atlantis
-    #     orgs: [Karga, Atlantis]
-    #     policy: OR('KargaMSP.member','AtlantisMSP.member')
+    - name: even-simpler
+      language: node
+      orgs: [Karga, Atlantis]
+      channels:
+      - name: private-karga-atlantis
+        orgs: [Karga, Atlantis]
+        policy: OR('KargaMSP.member','AtlantisMSP.member')
 
 chaincode:
   version: "1.0"
-  language: golang
 
 flow:
   invoke:

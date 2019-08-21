@@ -1,7 +1,11 @@
 peer:
     mspName: KargaMSP
     peerName: hlf-peer--karga--peer9
-    username: admin
+    username: User1
+    orgDomain: aptalkarga.tr
+    peerAddress: hlf-peer--karga--peer9.default.svc
+    channels:
+      - common
 
 splunk:
     hec:
@@ -12,7 +16,8 @@ splunk:
 
 secrets:
   peer:
-    cert: hlf-peer--karga--peer9-msp
-    certItem: cert.pem 
-    key: hlf-peer--karga--peer9-msp
-    keyItem: key.pem
+    create: true
+    # cert: hlf-peer--karga--peer9-msp
+    # certItem: cert.pem
+    # key: hlf-peer--karga--peer9-msp
+    # keyItem: key.pem

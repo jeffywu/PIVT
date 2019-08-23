@@ -53,3 +53,9 @@ For storing backup contents, using an Argo flow seemed more convenient. Volume s
 Similar to above, cloud native disk snaphots do not provide any consistency guarantees.
 
 Also, taking snapshot and restoring from it requires lots of cloud specific scripting. Our flow feels much more convenient as it will work on any cloud provider or even locally.
+
+### Why are node chaincode deployments failing with a weird DNS error?
+
+If you're seeing an error like the one below on AWS EKS, it's because docker in docker is not allowed to access the host network by default. If you are deploying your worker nodes via the AWS Console, you can set `--enable-docker-bridge true` in the `BootstrapArugments` parameters when deploying your stack. If deploying using eksctl, take a look at this [issue](https://github.com/weaveworks/eksctl/issues/942).
+
+    npm ERR! request to https://registry.npmjs.org/fabric-shim failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org:443

@@ -284,7 +284,7 @@ spec:
           value: {{ $org.Name | lower }}--{{ $peer | lower }}
         - name: CORE_METRICS_STATSD_WRITE_INTERVAL
           value: {{ $.Values.metrics.core.statsd.writeInterval }}
-        {{- end }}
+        {{- end }} # End statsD section
         {{- end }}
  
       # CouchDB container

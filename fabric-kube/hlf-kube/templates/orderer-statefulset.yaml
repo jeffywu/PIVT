@@ -189,7 +189,7 @@ spec:
           value: {{ $org.Name | lower }}--{{ $host.Hostname | lower }}
         - name: ORDERER_METRICS_STATSD_WRITE_INTERVAL
           value: {{ $.Values.metrics.orderer.statsd.writeInterval }}
-        {{- end }}
+        {{- end }} # End statsD section
         {{- end }}
 
         - name: HFC_LOGGING

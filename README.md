@@ -338,6 +338,8 @@ network:
   # defines which chaincodes will be installed to which organizations
   chaincodes:
     - name: very-simple
+      language: node
+      version: "1.0"
       # chaincode will be installed to all peers in these organizations
       orgs: [Karga, Nevergreen, Atlantis]
       # at which channels are we instantiating/upgrading chaincode?
@@ -347,13 +349,19 @@ network:
         # chaincode will be invoked on all peers in these organizations
         orgs: [Karga, Nevergreen, Atlantis]
         policy: OR('KargaMSP.member','NevergreenMSP.member','AtlantisMSP.member')
+      invoke:
+        function: '{"function":"ping","Args":[""]}'
         
     - name: even-simpler
+      language: node
+      version: "1.0"
       orgs: [Karga, Atlantis]
       channels:
       - name: private-karga-atlantis
         orgs: [Karga, Atlantis]
         policy: OR('KargaMSP.member','AtlantisMSP.member')
+      invoke:
+        function: '{"function":"ping","Args":[""]}'
 ```
 
 For chart specific configuration, please refer to the comments in the relevant [values.yaml](fabric-kube/hlf-kube/values.yaml) files.

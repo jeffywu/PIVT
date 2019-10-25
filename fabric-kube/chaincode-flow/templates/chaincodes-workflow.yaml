@@ -81,19 +81,20 @@ spec:
 # second level: chaincode templates
 {{- range $i, $chaincode := .Values.network.chaincodes }}
 {{- if or (not $.Values.flow.chaincode.include) (has $chaincode.name $.Values.flow.chaincode.include) }}
+{{- $version := $chaincode.version | default $.Values.chaincode.version }}
   - name: chaincode--{{ $chaincode.name }}
     steps:
     {{- if $.Values.flow.install.enabled }}
-    - - name: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
-        template: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
+    - - name: install-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}
+        template: install-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}
     {{- end }}
     {{- if $.Values.flow.instantiate.enabled }}
-    - - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
-        template: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
+    - - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}
+        template: instantiate-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}
     {{- end }}
     {{- if $.Values.flow.upgrade.enabled }}
-    - - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
-        template: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
+    - - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}
+        template: upgrade-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}
     {{- end }}
     {{- if $.Values.flow.invoke.enabled }}
     - - name: invoke-chaincode--{{ $chaincode.name }}
@@ -107,7 +108,7 @@ spec:
 {{- range $i, $chaincode := .Values.network.chaincodes }}
 {{- if or (not $.Values.flow.chaincode.include) (has $chaincode.name $.Values.flow.chaincode.include) }}
 {{- $_ := set $vars "firstStep" true }}
-  - name: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
+  - name: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}
     steps:
      
 {{- range $orgName := $chaincode.orgs }}
@@ -121,8 +122,8 @@ spec:
 {{- if or $vars.firstStep (not $.Values.flow.install.parallel) }}
     - 
 {{- end }}
-      - name: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
-        template: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
+      - name: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
+        template: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
 {{- $_ := set $vars "firstStep" false }}
 {{- end }} {{- /* peerIndex */ -}} 
 {{- end }} {{- /* if org */ -}} 
@@ -138,7 +139,7 @@ spec:
 {{- range $i, $chaincode := .Values.network.chaincodes }}
 {{- if or (not $.Values.flow.chaincode.include) (has $chaincode.name $.Values.flow.chaincode.include) }}
 {{- $_ := set $vars "firstStep" true }}
-  - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
+  - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}
     steps:
 {{- range $channel := $chaincode.channels }}
 {{- $orgName := index $channel.orgs 0 }}
@@ -152,8 +153,8 @@ spec:
 {{- if or $vars.firstStep (not $.Values.flow.instantiate.parallel) }}
     - 
 {{- end }}
-      - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
-        template: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $channel.name  }}--{{ $org.Name }}--{{ $peer }}
+      - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
+        template: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}--{{ $channel.name  }}--{{ $org.Name }}--{{ $peer }}
 
 {{- $_ := set $vars "firstStep" false }}
 {{- end }} {{- /* if org */ -}} 
@@ -169,7 +170,7 @@ spec:
 {{- range $i, $chaincode := .Values.network.chaincodes }}
 {{- if or (not $.Values.flow.chaincode.include) (has $chaincode.name $.Values.flow.chaincode.include) }}
 {{- $_ := set $vars "firstStep" true }}
-  - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}
+  - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}
     steps:
 {{- range $channel := $chaincode.channels }}
 {{- $orgName := index $channel.orgs 0 }}
@@ -183,8 +184,8 @@ spec:
 {{- if or $vars.firstStep (not $.Values.flow.instantiate.parallel) }}
     - 
 {{- end }}
-      - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
-        template: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $channel.name  }}--{{ $org.Name }}--{{ $peer }}
+      - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
+        template: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | default $.Values.chaincode.version | replace "." "-" }}--{{ $channel.name  }}--{{ $org.Name }}--{{ $peer }}
 
 {{- $_ := set $vars "firstStep" false }}
 {{- end }} {{- /* if org */ -}} 
@@ -240,8 +241,10 @@ spec:
 {{- $peerStartIndex := (not $org.Template.Start) | ternary 0 $org.Template.Start | int }}
 {{- range $peerIndex := untilStep $peerStartIndex (add $peerStartIndex $org.Template.Count | int) 1 }}
 {{- $peer := (printf "peer%s" ($peerIndex | toString)) }}
+{{- $language := $chaincode.language | default $.Values.chaincode.language }}
+{{- $version := $chaincode.version | default $.Values.chaincode.version }}
 
-  - name: install-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
+  - name: install-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
     # chaincode: {{ $chaincode.name }}
     # org: {{ $org.Name }}
     # peer: {{ $peer }}
@@ -250,18 +253,18 @@ spec:
       limit: {{ $.Values.retryCount }}
     container:
       # chaincode is packed with tar, first extract it
-      {{- if eq $chaincode.language "golang" }}
+      {{- if eq $language "golang" }}
       image: hyperledger/fabric-tools:{{ $.Values.hyperledgerVersion }}
       command: ["sh", "-c", "mkdir -p $GOPATH/src/chaincode && \
                              tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C $GOPATH/src/chaincode && \ 
                              peer chaincode install -p chaincode/{{ $chaincode.name }} -n {{ $chaincode.name }} \
-                                  -v {{ $chaincode.version }} -l {{ $chaincode.language }}"]
+                                  -v {{ $version }} -l {{ $language }}"]
       {{- else }}
       image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
       command: ["sh", "-c", "mkdir -p /chaincode && \
                              tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C /chaincode && \ 
                              peer chaincode install -p /chaincode/{{ $chaincode.name }} -n {{ $chaincode.name }} \
-                                  -v {{ $chaincode.version }} -l {{ $chaincode.language }}"]
+                                  -v {{ $version }} -l {{ $language }}"]
       {{- end }}
 
       volumeMounts:
@@ -313,8 +316,10 @@ spec:
 
 {{- $peerStartIndex := (not $org.Template.Start) | ternary 0 $org.Template.Start | int }}
 {{- $peer := (printf "peer%s" ($peerStartIndex | toString)) }}
+{{- $language := $chaincode.language | default $.Values.chaincode.language }}
+{{- $version := $chaincode.version | default $.Values.chaincode.version }}
 
-  - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
+  - name: instantiate-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
     # chaincode: {{ $chaincode.name }}
     # channel: {{ $channel.name }}
     # org: {{ $org.Name }}
@@ -324,7 +329,7 @@ spec:
       limit: {{ $.Values.retryCount }}
     container:
       image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
-      command: ["sh", "-c", "peer chaincode instantiate -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $chaincode.version }} -l {{ $chaincode.language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
+      command: ["sh", "-c", "peer chaincode instantiate -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $version }} -l {{ $language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
                                 {{- if $.Values.tlsEnabled }}
                                     --tls --cafile /hlf_config/orderer-tlsca/tlscacert.pem \
                                 {{- end }}
@@ -378,8 +383,10 @@ spec:
 
 {{- $peerStartIndex := (not $org.Template.Start) | ternary 0 $org.Template.Start | int }}
 {{- $peer := (printf "peer%s" ($peerStartIndex | toString)) }}
+{{- $language := $chaincode.language | default $.Values.chaincode.language }}
+{{- $version := $chaincode.version | default $.Values.chaincode.version }}
 
-  - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $chaincode.version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
+  - name: upgrade-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
     # chaincode: {{ $chaincode.name }}
     # channel: {{ $channel.name }}
     # org: {{ $org.Name }}
@@ -389,7 +396,7 @@ spec:
       limit: {{ $.Values.retryCount }}
     container:
       image: hyperledger/fabric-peer:{{ $.Values.hyperledgerVersion }}
-      command: ["sh", "-c", "peer chaincode upgrade -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $chaincode.version }} -l {{ $chaincode.language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
+      command: ["sh", "-c", "peer chaincode upgrade -C {{ $channel.name }} -n {{ $chaincode.name }} -v {{ $version }} -l {{ $language }} -P \"{{ $channel.policy }}\" -o {{ $ordererAddress }}:7050 -c '{\"Args\":[\"\"]}' \
                                 {{- if $.Values.tlsEnabled }}
                                     --tls --cafile /hlf_config/orderer-tlsca/tlscacert.pem \
                                 {{- end }}
